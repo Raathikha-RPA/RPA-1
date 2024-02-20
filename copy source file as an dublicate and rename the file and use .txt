@@ -1,0 +1,48 @@
+Option Explicit
+
+' Get the current date and time
+Dim currentDateTime
+currentDateTime = Now
+
+' Format the date and time as a string
+Dim formattedDateTime
+formattedDateTime = Year(currentDateTime) & "-" & Right("0" & Month(currentDateTime), 2) & "-" & Right("0" & Day(currentDateTime), 2) & _
+                   "_" & Right("0" & Hour(currentDateTime), 2) & "-" & Right("0" & Minute(currentDateTime), 2) & "-" & Right("0" & Second(currentDateTime), 2)
+
+' Source file path (change this to the path of your existing file)
+Dim sourceFilePath
+sourceFilePath = "C:\Users\igs\Desktop\Period Close Reconciliation_Finance.xlsx"
+
+' Destination folder path (change this to the path where you want to create the duplicate)
+Dim destinationFolder
+destinationFolder = "C:\Users\igs\Desktop\"
+
+' Destination file name (change this to the desired name for the duplicate)
+Dim destinationFileName
+destinationFileName = "Period Close Reconciliation_Finance-" & formattedDateTime & ".xlsx"
+
+' Build the full path for the destination file
+Dim destinationFilePath
+destinationFilePath = destinationFolder & destinationFileName
+
+' Create a FileSystemObject
+Dim fso
+Set fso = CreateObject("Scripting.FileSystemObject")
+
+' Check if the source file exists
+If fso.FileExists(sourceFilePath) Then
+    ' Copy the source file to the destination folder
+    fso.CopyFile sourceFilePath, destinationFolder
+
+    ' Rename the duplicated file
+    fso.MoveFile destinationFolder & fso.GetFileName(sourceFilePath), destinationFilePath
+
+    ' Display a message indicating success
+    MsgBox "File duplicated and renamed successfully.", vbInformation
+Else
+    ' Display an error message if the source file doesn't exist
+    MsgBox "Source file not found.", vbExclamation
+End If
+
+' Release the FileSystemObject
+Set fso = Nothing
